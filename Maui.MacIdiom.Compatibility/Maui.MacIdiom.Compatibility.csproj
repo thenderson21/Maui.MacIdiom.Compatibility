@@ -10,6 +10,18 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 
+        <IsPackable>true</IsPackable>
+        <PackageId>Maui.MacIdiom.Compatibility</PackageId>
+        <Authors>Todd Henderson</Authors>
+        <Description>Compatibility handlers for .NET MAUI applications using the Mac Catalyst Mac UI idiom.</Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/thenderson21/Maui.MacIdiom.Compatibility</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
         <!-- Enable XAML source generation for faster build times and improved performance.
              This generates C# code from XAML at compile time instead of runtime inflation.
              To disable, remove this line.
@@ -27,6 +39,10 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="../README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
     <ItemGroup>

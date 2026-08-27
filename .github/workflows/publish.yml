@@ -1,0 +1,66 @@
+name: Publish NuGet package
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish ${{ github.ref_name }} package
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore MAUI workloads
+        run: dotnet workload restore Maui.MacIdiom.Compatibility/Maui.MacIdiom.Compatibility.csproj
+
+      - name: Set package version
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == "develop" ]]; then
+            echo "PACKAGE_VERSION=0.1.${GITHUB_RUN_NUMBER}-preview.${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_ENV"
+          else
+            echo "PACKAGE_VERSION=0.1.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Pack
+        run: >-
+          dotnet pack Maui.MacIdiom.Compatibility/Maui.MacIdiom.Compatibility.csproj
+          --configuration Release
+          --output artifacts
+          -p:PackageVersion=${{ env.PACKAGE_VERSION }}
+          -p:ContinuousIntegrationBuild=true
+
+      - name: Publish prerelease to GitHub Packages
+        if: github.ref_name == 'develop'
+        run: >-
+          dotnet nuget push "artifacts/*.nupkg"
+          --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+          --api-key "${{ secrets.GITHUB_TOKEN }}"
+          --skip-duplicate
+
+      - name: Publish stable release to NuGet.org
+        if: github.ref_name == 'main'
+        run: >-
+          dotnet nuget push "artifacts/*.nupkg"
+          --source "https://api.nuget.org/v3/index.json"
+          --api-key "${{ secrets.NUGET_API_KEY }}"
+          --skip-duplicate
