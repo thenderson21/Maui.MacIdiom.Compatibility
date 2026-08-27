@@ -37,7 +37,7 @@ jobs:
           dotnet pack Maui.MacIdiom.Compatibility/Maui.MacIdiom.Compatibility.csproj
           --configuration Release
           --output artifacts
-          -p:PackageVersion=0.1.${{ github.run_number }}-preview.${{ github.run_attempt }}
+          -p:VersionSuffix=preview.${{ github.run_number }}
           -p:ContinuousIntegrationBuild=true
 
       - name: Publish prerelease to GitHub Packages
@@ -73,7 +73,6 @@ jobs:
           dotnet pack Maui.MacIdiom.Compatibility/Maui.MacIdiom.Compatibility.csproj
           --configuration Release
           --output artifacts
-          -p:PackageVersion=0.1.${{ github.run_number }}
           -p:ContinuousIntegrationBuild=true
 
       - name: Log in to NuGet.org with trusted publishing
