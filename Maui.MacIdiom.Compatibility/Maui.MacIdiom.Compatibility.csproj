@@ -11,7 +11,7 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>true</IsPackable>
-        <PackageId>Maui.MacIdiom.Compatibility</PackageId>
+        <PackageId>ToddHenderson.Maui.MacIdiom.Compatibility</PackageId>
         <VersionPrefix>0.0.3</VersionPrefix>
         <Authors>Todd Henderson</Authors>
         <Description>Compatibility handlers for .NET MAUI applications using the Mac Catalyst Mac UI idiom.</Description>
